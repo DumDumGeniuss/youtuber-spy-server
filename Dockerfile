@@ -1,10 +1,13 @@
 FROM node:latest
 
-COPY . /app
-COPY package.json /app/package.json
-COPY .env /app/.env
-
+RUN mkdir -p /app
 WORKDIR /app
+
+
+COPY package.json package.json
+
 
 RUN npm install yarn -g
 RUN yarn install
+
+COPY . .
