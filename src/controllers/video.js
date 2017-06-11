@@ -1,4 +1,4 @@
-const Video = require('../models/video.js');
+const Video = require('../models/Video.js');
 
 exports.getVideos = (req, res) => {
   let sort = req.query.sort || 'publishedAt';
