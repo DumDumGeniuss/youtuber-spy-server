@@ -7,17 +7,13 @@ services:
     depends_on:
      - mongo 
     links:
-     - mongo 
-    volumes:
-     - .:/app
+     - mongo
     command:
         ['yarn', 'run', 'dev']
   web-prod:
     build: .
     ports:
      - "5000:5000"
-    volumes:
-     - .:/app
     command:
         ['yarn', 'run', 'start']
   mongo:
