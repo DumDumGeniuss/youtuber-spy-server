@@ -38,6 +38,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 * Allow origin
 */
 app.use((req, res, next) => {
+  const allowOrigins = process.env.ALLOW_ORIGINS.split(',');
+  const origin = req.headers.origin;
+  if(allowOrigins.indexOf(origin) > -1){
+       res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.header('Content-Type','application/json');
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
