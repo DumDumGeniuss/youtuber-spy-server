@@ -7,6 +7,7 @@ const db = require('./services/db.js');
 const homeRouter = require('./routes/home.js');
 const playerRouter = require('./routes/player.js');
 const channelRouter = require('./routes/channel.js');
+const candidateChannelRouter = require('./routes/candidateChannel.js');
 const videoRouter = require('./routes/video.js');
 
 const app = express();
@@ -56,6 +57,7 @@ app.use((req, res, next) => {
 app.use('/', homeRouter);
 app.use('/players', playerRouter);
 app.use('/channels', channelRouter);
+app.use('/candidateChannels', candidateChannelRouter);
 app.use('/videos', videoRouter);
 
 /**
