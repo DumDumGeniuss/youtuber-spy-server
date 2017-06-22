@@ -56,6 +56,10 @@ const model = mongoose.model('CandidateChannel', {
     type: Number,
     required: true,
   },
+  isVerified: {
+    type: Boolean,
+    required: true,
+  }
 });
 
 module.exports = model;

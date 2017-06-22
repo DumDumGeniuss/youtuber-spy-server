@@ -43,6 +43,7 @@ exports.addCandidateChannel = (req, res) => {
       newCandidateChannel.userId = result.id;
       newCandidateChannel.userName = result.name;
       newCandidateChannel.userPicture = result.picture;
+      newCandidateChannel.isVerified = false;
 
       return youtubeApi.getYoutubeChannelId(body.link);
     })
@@ -103,6 +104,56 @@ exports.addCandidateChannel = (req, res) => {
             message: 'alrady in CandidateChannel',
           });
         }
+      }
+    });
+  // res.status(200).json({ hey: 'addChannel' });
+};
+
+exports.updateCandidateChannel = (req, res) => {
+  const query = req.query;
+  const channelId = req.params.id;
+  const body = req.body;
+  const superUsers = process.env.SUPER_USERS.split(',');
+  if (!query.action) {
+    res.status(500).json({
+      message: 'no action found',
+    });
+    return;
+  }
+
+  youtubeApi.getUserInfo(query.access_token)
+    .then((result) => {
+      if (!result) {
+        return Promise.reject({
+          status: 403,
+          message: 'Your token is not valid',
+        });
+      }
+      if (superUsers.indexOf(result.id) < 0) {
+        return Promise.reject({
+          status: 403,
+          message: 'Your are not super user',
+        });
+      }
+      const newChannel = new Channel({
+        _id: channelId,
+      });
+      return newChannel.save();
+    })
+    .then(() => {
+      return CandidateChannel.update({ _id: channelId }, { isVerified: true });
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: 'success',
+        data: result,
+      });
+    })
+    .catch((err) => {
+      if (err.status) {
+        res.status(err.status).json(err);
+      } else if (err.code) {
+        res.status(500).json(err);
       }
     });
   // res.status(200).json({ hey: 'addChannel' });

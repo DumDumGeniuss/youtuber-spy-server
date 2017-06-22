@@ -6,6 +6,7 @@ const expressValidator = require('express-validator');
 const db = require('./services/db.js');
 const homeRouter = require('./routes/home.js');
 const playerRouter = require('./routes/player.js');
+const userRouter = require('./routes/user.js');
 const channelRouter = require('./routes/channel.js');
 const candidateChannelRouter = require('./routes/candidateChannel.js');
 const videoRouter = require('./routes/video.js');
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
   }
   res.header('Content-Type','application/json');
   res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
@@ -55,6 +57,7 @@ app.use((req, res, next) => {
 * Routers
 */
 app.use('/', homeRouter);
+app.use('/users', userRouter);
 app.use('/players', playerRouter);
 app.use('/channels', channelRouter);
 app.use('/candidateChannels', candidateChannelRouter);
