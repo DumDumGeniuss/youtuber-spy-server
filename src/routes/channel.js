@@ -8,7 +8,7 @@ const router = express.Router();
 */
 router.get('/', channelController.getChannels);
 router.post('/', channelController.addChannel);
-// router.get('/:id', playerController.getPlayer);
+router.get('/:id', channelController.getChannel);
 // router.put('/:id', playerController.updatePlayer);
 // router.delete('/:id', playerController.deletePlayer);
 

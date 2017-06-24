@@ -27,6 +27,9 @@ const model = mongoose.model('Channel', {
   highThumbnails: {
     type: String,
   },
+  bannerTvImageUrl: {
+    type: String,
+  },
   viewCount: {
     type: Number,
   },

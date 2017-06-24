@@ -23,6 +23,18 @@ exports.getChannels = (req, res) => {
     });
 };
 
+exports.getChannel = (req, res) => {
+  let channelId = req.params.id;
+
+  Channel.find({_id: channelId})
+    .then((result) => {
+      res.status(200).json({
+        data: result,
+        token: Math.random().toString(16).substring(2),
+      });
+    });
+};
+
 exports.addChannel = (req, res) => {
   const channel = req.body;
   if (!channel._id) {
