@@ -8,6 +8,7 @@ exports.getVideos = (req, res) => {
   let startTime = req.query.startTime || '1970-01-01';
   let endTime = req.query.endTime || '2100-12-31';
   let keyword = req.query.keyword || '';
+  let channelId = req.query.channelId || '';
 
   const dbQuery = {
     title: { $regex: new RegExp(keyword, 'i'), $exists: true },
@@ -16,6 +17,10 @@ exports.getVideos = (req, res) => {
       '$lte':  new Date(endTime)
     },
   };
+
+  if (channelId) {
+    dbQuery.channelId = channelId;
+  }
 
   let dbConnection;
   let videos = [];

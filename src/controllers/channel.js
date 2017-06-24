@@ -26,7 +26,7 @@ exports.getChannels = (req, res) => {
 exports.getChannel = (req, res) => {
   let channelId = req.params.id;
 
-  Channel.find({_id: channelId})
+  Channel.findById(channelId)
     .then((result) => {
       res.status(200).json({
         data: result,
