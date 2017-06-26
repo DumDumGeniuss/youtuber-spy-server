@@ -10,6 +10,7 @@ const userRouter = require('./routes/user.js');
 const channelRouter = require('./routes/channel.js');
 const candidateChannelRouter = require('./routes/candidateChannel.js');
 const videoRouter = require('./routes/video.js');
+const articleRouter = require('./routes/article.js');
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use('/players', playerRouter);
 app.use('/channels', channelRouter);
 app.use('/candidateChannels', candidateChannelRouter);
 app.use('/videos', videoRouter);
+app.use('/articles', articleRouter);
 
 /**
 * Start server
