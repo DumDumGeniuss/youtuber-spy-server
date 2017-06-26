@@ -25,14 +25,29 @@ exports.getChannels = (req, res) => {
 
 exports.getChannel = (req, res) => {
   let channelId = req.params.id;
+  const query = req.query;
 
-  Channel.findById(channelId)
-    .then((result) => {
-      res.status(200).json({
-        data: result,
-        token: Math.random().toString(16).substring(2),
+  if (query.random) {
+    Channel.count({})
+      .then((result) => {
+        let randomSkip = parseInt(Math.random() * result, 10);
+        return Channel.find({}).skip(randomSkip).limit(1);
+      })
+      .then((result) => {
+        res.status(200).json({
+          data: result[0],
+          token: Math.random().toString(16).substring(2),
+        });
+      })
+  } else {
+    Channel.findById(channelId)
+      .then((result) => {
+        res.status(200).json({
+          data: result,
+          token: Math.random().toString(16).substring(2),
+        });
       });
-    });
+  }
 };
 
 exports.addChannel = (req, res) => {
