@@ -35,7 +35,7 @@ exports.getChannelInfo = (ids, appKey) => {
     key: appKey,
   });
 
-  console.log(youtubeApi + 'channels' + queryString);
+  // console.log(youtubeApi + 'channels' + queryString);
   return fetch(youtubeApi + 'channels' + queryString, {
     method: 'GET',
   })

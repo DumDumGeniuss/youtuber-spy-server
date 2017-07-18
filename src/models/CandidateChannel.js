@@ -13,9 +13,6 @@ const model = mongoose.model('CandidateChannel', {
   description: {
     type: String,
   },
-  userDescription: {
-    type: String,
-  },
   link: {
     type: String,
     required: true,

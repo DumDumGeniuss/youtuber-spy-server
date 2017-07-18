@@ -77,7 +77,6 @@ exports.addCandidateChannel = (req, res) => {
       const channel = result;
       newCandidateChannel._id = channelId;
       newCandidateChannel.link = body.link || '';
-      newCandidateChannel.userDescription = body.userDescription || '';
       newCandidateChannel.title = channel.snippet.title;
       newCandidateChannel.description = channel.snippet.description || '';
       newCandidateChannel.defaultThumbnails = channel.snippet.thumbnails.default.url;
