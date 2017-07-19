@@ -59,9 +59,9 @@ exports.addCandidateChannel = (req, res) => {
       return Channel.findById(channelId);
     })
     .then((result) => {
-      if (!result) {
+      if (result) {
         return Promise.reject({
-          status: 403,
+          status: 409,
           message: 'The channel has already in channel list',
         });
       }
