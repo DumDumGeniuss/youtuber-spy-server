@@ -56,7 +56,7 @@ exports.addCandidateChannel = (req, res) => {
       }
       channelId = result;
       /* If it already in Channel list ? */
-      return Channel.find({_id: channelId});
+      return Channel.findById(channelId);
     })
     .then((result) => {
       if (!result) {
