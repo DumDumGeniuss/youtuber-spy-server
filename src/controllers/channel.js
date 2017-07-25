@@ -1,4 +1,5 @@
 const Channel = require('../models/Channel.js');
+const Category = require('../models/Category.js');
 
 exports.getChannels = (req, res) => {
   let sort = req.query.sort || 'subscriberCount';
@@ -6,18 +7,33 @@ exports.getChannels = (req, res) => {
   let page = parseInt(req.query.page || 1, 10);
   let count = parseInt(req.query.count || 100, 10);
   let keyword = req.query.keyword || '';
+  let category = req.query.category || '';
+  let country = req.query.country || '';
 
   const dbQuery = {
     title: { $regex: new RegExp(keyword, 'i'), $exists: true },
   };
+  if (category) {
+    dbQuery.category = category;
+  }
+  if (country) {
+    dbQuery.country = country;
+  }
 
   Promise.all(
-    [Channel.find(dbQuery).sort({ [sort]: order }).skip((page - 1)*count).limit(count), Channel.count(dbQuery)]
+    [
+      Channel.find(dbQuery).sort({ [sort]: order }).skip((page - 1)*count).limit(count),
+      Channel.count(dbQuery),
+      Category.findById('channelCategory'),
+      Category.findById('countryCategory'),
+    ]
   )
     .then((results) => {
       res.status(200).json({
         datas: results[0],
         totalCount: results[1],
+        channelCategories: results[2].categories,
+        countryCategories: results[3].categories,
         token: Math.random().toString(16).substring(2),
       });
     });

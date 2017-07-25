@@ -12,6 +12,15 @@ const model = mongoose.model('Channel', {
   title: {
     type: String,
   },
+  country: {
+    type: String,
+  },
+  category: {
+    type: String,
+  },
+  socialInfos: {
+    type: Array,
+  },
   description: {
     type: String,
   },
