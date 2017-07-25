@@ -157,3 +157,39 @@ exports.updateCandidateChannel = (req, res) => {
     });
   // res.status(200).json({ hey: 'addChannel' });
 };
+
+exports.deleteCandidateChannel = (req, res) => {
+  const query = req.query;
+  const channelId = req.params.id;
+  const superUsers = process.env.SUPER_USERS.split(',');
+
+  youtubeApi.getUserInfo(query.access_token)
+    .then((result) => {
+      if (!result) {
+        return Promise.reject({
+          status: 403,
+          message: 'Your token is not valid',
+        });
+      }
+      if (superUsers.indexOf(result.id) < 0) {
+        return Promise.reject({
+          status: 403,
+          message: 'Your are not super user',
+        });
+      }
+      return CandidateChannel.deleteOne({ _id: channelId });
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: 'success',
+      });
+    })
+    .catch((err) => {
+      if (err.status) {
+        res.status(err.status).json(err);
+      } else if (err.code) {
+        res.status(500).json(err);
+      }
+    });
+  // res.status(200).json({ hey: 'addChannel' });
+};
