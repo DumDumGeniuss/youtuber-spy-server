@@ -29,23 +29,40 @@ exports.getVideos = (req, res) => {
 
   let dbConnection;
   let videos = [];
-  let totalCounts = []
+  let totalCounts;
 
-  Promise.all(
-    [
-      Video.find(dbQuery).sort({ [sort]: order }).skip((page - 1)*count).limit(count),
-      Video.count(dbQuery),
-      Category.findById('videoCategory'),
-    ]
-  )
-    .then((results) => {
-      res.status(200).json({
-        datas: results[0],
-        totalCount: results[1],
-        videoCategories: results[2].categories,
-        token: Math.random().toString(16).substring(2),
+  if (req.query.random) {
+    Video.count(dbQuery)
+      .then((result) => {
+        totalCounts = result;
+        let randomSkip = parseInt(Math.random() * result, 10);
+        randomSkip = randomSkip + count > result ? result - count : randomSkip;
+        return Video.find(dbQuery).skip(randomSkip).limit(count);
+      })
+      .then((result) => {
+        res.status(200).json({
+          datas: result,
+          token: Math.random().toString(16).substring(2),
+          totalCount: totalCounts,
+        });
+      })
+  } else {
+    Promise.all(
+      [
+        Video.find(dbQuery).sort({ [sort]: order }).skip((page - 1)*count).limit(count),
+        Video.count(dbQuery),
+        Category.findById('videoCategory'),
+      ]
+    )
+      .then((results) => {
+        res.status(200).json({
+          datas: results[0],
+          totalCount: results[1],
+          videoCategories: results[2].categories,
+          token: Math.random().toString(16).substring(2),
+        });
       });
-    });
+  }
 };
 
 exports.getVideo = (req, res) => {
