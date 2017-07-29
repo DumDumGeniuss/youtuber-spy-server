@@ -5,7 +5,7 @@ exports.getChannels = (req, res) => {
   let sort = req.query.sort || 'subscriberCount';
   let order = req.query.order || 'desc';
   let page = parseInt(req.query.page || 1, 10);
-  let count = parseInt(req.query.count || 100, 10);
+  let count = parseInt(req.query.count || 4, 10);
   let keyword = req.query.keyword || '';
   let category = req.query.category || '';
   let country = req.query.country || '';
