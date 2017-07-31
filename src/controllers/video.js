@@ -37,6 +37,7 @@ exports.getVideos = (req, res) => {
         totalCounts = result;
         let randomSkip = parseInt(Math.random() * result, 10);
         randomSkip = randomSkip + count > result ? result - count : randomSkip;
+        randomSkip = randomSkip < 0 ? 0 : randomSkip;
         return Video.find(dbQuery).skip(randomSkip).limit(count);
       })
       .then((result) => {
