@@ -6,7 +6,23 @@ const model = mongoose.model('Article', {
     type: String,
     required: true,
   },
-  addTime: {
+  userId: {
+    type: String,
+    required: true,
+  },
+  userName: {
+    type: String,
+    required: true,
+  },
+  userPicture: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    required: true,
+  },
+  updatedAt: {
     type: Date,
     required: true,
   },
@@ -14,12 +30,16 @@ const model = mongoose.model('Article', {
     type: String,
     required: true,
   },
-  content: {
+  deltaContent: {
+    type: Object,
+    required: true,
+  },
+  rawContent: {
     type: String,
     required: true,
   },
-  titleImage: {
-    type: String,
+  commentCount: {
+    type: Number,
     required: true,
   },
 });
