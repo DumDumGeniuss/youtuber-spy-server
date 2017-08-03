@@ -50,18 +50,30 @@ exports.getChannel = (req, res) => {
         return Channel.find({}).skip(randomSkip).limit(1);
       })
       .then((result) => {
-        res.status(200).json({
-          data: result[0],
-          token: Math.random().toString(16).substring(2),
-        });
+        if (!result[0]) {
+          res.status(404).json({
+            message: 'no channel found',
+          });
+        } else {
+          res.status(200).json({
+            data: result[0],
+            token: Math.random().toString(16).substring(2),
+          });
+        }
       })
   } else {
     Channel.findById(channelId)
       .then((result) => {
-        res.status(200).json({
-          data: result,
-          token: Math.random().toString(16).substring(2),
-        });
+        if (!result) {
+          res.status(404).json({
+            message: 'no channel found',
+          });
+        } else {
+          res.status(200).json({
+            data: result,
+            token: Math.random().toString(16).substring(2),
+          });
+        }
       });
   }
 };
