@@ -72,7 +72,7 @@ exports.addArticle = (req, res) => {
   }
 
 
-  if (!article.rawContent || article.rawContent.length < 30 || article.rawContent.length > 1500) {
+  if (!article.rawContent || article.rawContent.length < 30 || article.rawContent.length > 1000) {
     res.status(411).json({
       message: 'Content too short or too long',
     });
@@ -132,7 +132,7 @@ exports.updateArticle = (req, res) => {
   }
 
 
-  if (!article.rawContent || article.rawContent.length < 30 || article.rawContent.length > 1500) {
+  if (!article.rawContent || article.rawContent.length < 30 || article.rawContent.length > 1000) {
     res.status(411).json({
       message: 'Content too short or too long',
     });

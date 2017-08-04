@@ -46,7 +46,7 @@ exports.addComment = (req, res) => {
   const articleId =comment.articleId;
   let articleCommentCount;
 
-  if (!comment.content || comment.content.length < 30 || comment.content.length > 200) {
+  if (!comment.content || comment.content.length > 200) {
     res.status(411).json({
       message: 'Content too short or too long',
     });
