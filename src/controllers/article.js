@@ -1,4 +1,5 @@
 const Article = require('../models/Article.js');
+const Comment = require('../models/Comment.js');
 const youtubeApi = require('../libs/youtubeApi');
 const tinyHelper = require('../libs/tinyHelper');
 const mongoose = require('mongoose');
@@ -63,7 +64,7 @@ exports.addArticle = (req, res) => {
   const article = req.body;
   const dateNow = new Date();
 
-  if (!article.title || article.title.lenght > 30) {
+  if (!article.title || article.title.length > 20) {
     res.status(411).json({
       message: 'Title too short or too long',
     });
@@ -71,7 +72,7 @@ exports.addArticle = (req, res) => {
   }
 
 
-  if (!article.rawContent || article.rawContent.lenght < 30 || article.rawContent.lenght > 1500) {
+  if (!article.rawContent || article.rawContent.length < 30 || article.rawContent.length > 1500) {
     res.status(411).json({
       message: 'Content too short or too long',
     });
@@ -122,6 +123,21 @@ exports.updateArticle = (req, res) => {
   const article = req.body;
   const dateNow = new Date();
   let articleUserId = '';
+
+  if (!article.title || article.title.length > 20) {
+    res.status(411).json({
+      message: 'Title too short or too long',
+    });
+    return;
+  }
+
+
+  if (!article.rawContent || article.rawContent.length < 30 || article.rawContent.length > 1500) {
+    res.status(411).json({
+      message: 'Content too short or too long',
+    });
+    return;
+  }
 
   Article.findById(articleId)
     .then((article) => {
@@ -208,6 +224,16 @@ exports.deleteArticle = (req, res) => {
       }
 
       return Article.deleteOne({ _id: articleId });
+    })
+    .then((result) => {
+      return Comment.find({ articleId: articleId }, '_id');
+    })
+    .then((comments) => {
+      const commentIds = [];
+      comments.forEach((comment) => {
+        commentIds.push(comment._id)
+      });
+      return Comment.remove({ _id: { $in: commentIds } });
     })
     .then((result) => {
       res.status(200).json({
