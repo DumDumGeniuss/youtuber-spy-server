@@ -9,6 +9,7 @@ const router = express.Router();
 router.get('/', articleController.getArticles);
 router.get('/:id', articleController.getArticle);
 router.put('/:id', articleController.updateArticle);
+router.delete('/:id', articleController.deleteArticle);
 router.post('/', articleController.addArticle);
 
 module.exports = router;

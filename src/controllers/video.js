@@ -47,6 +47,13 @@ exports.getVideos = (req, res) => {
           totalCount: totalCounts,
         });
       })
+      .catch((err) => {
+        if (err.status) {
+          res.status(err.status).json(err);
+        } else {
+          res.status(500).json(err);
+        }
+      });
   } else {
     Promise.all(
       [
@@ -62,6 +69,13 @@ exports.getVideos = (req, res) => {
           videoCategories: results[2].categories,
           token: Math.random().toString(16).substring(2),
         });
+      })
+      .catch((err) => {
+        if (err.status) {
+          res.status(err.status).json(err);
+        } else {
+          res.status(500).json(err);
+        }
       });
   }
 };
@@ -78,28 +92,42 @@ exports.getVideo = (req, res) => {
       })
       .then((result) => {
         if (!result[0]) {
-          res.status(404).json({
-            message: 'no video found',
-          });
-        } else {
-          res.status(200).json({
-            data: result[0],
-            token: Math.random().toString(16).substring(2),
+          return Promise.reject({
+            status: 404,
+            message: 'Video Not Found',
           });
         }
+        res.status(200).json({
+          data: result[0],
+          token: Math.random().toString(16).substring(2),
+        });
       })
+      .catch((err) => {
+        if (err.status) {
+          res.status(err.status).json(err);
+        } else {
+          res.status(500).json(err);
+        }
+      });
   } else {
     Video.findById(videoId)
       .then((result) => {
         if (!result) {
-          res.status(404).json({
-            message: 'no video found',
+          return Promise.reject({
+            status: 404,
+            message: 'Video Not Found',
           });
+        }
+        res.status(200).json({
+          data: result,
+          token: Math.random().toString(16).substring(2),
+        });
+      })
+      .catch((err) => {
+        if (err.status) {
+          res.status(err.status).json(err);
         } else {
-          res.status(200).json({
-            data: result,
-            token: Math.random().toString(16).substring(2),
-          });
+          res.status(500).json(err);
         }
       });
   }
