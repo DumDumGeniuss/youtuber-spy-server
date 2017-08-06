@@ -99,6 +99,7 @@ exports.addArticle = (req, res) => {
         rawContent: article.rawContent,
         deltaContent: article.deltaContent,
         commentCount: 0,
+        anonymous: article.anonymous,
       });
       return newArticle.save();
     })
