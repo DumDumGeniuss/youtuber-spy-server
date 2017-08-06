@@ -45,6 +45,7 @@ exports.addComment = (req, res) => {
   const dateNow = new Date();
   const articleId =comment.articleId;
   let articleCommentCount;
+  const isAnonymous = comment.anonymous;
 
   if (!comment.content || comment.content.length > 200) {
     res.status(411).json({
@@ -75,9 +76,10 @@ exports.addComment = (req, res) => {
         _id: mongoose.Types.ObjectId(),
         articleId: articleId,
         content: comment.content,
+        anonymous: comment.anonymous,
         userId: result.id,
-        userName: result.name,
-        userPicture: result.picture,
+        userName: isAnonymous ? 'anonymous' : result.name,
+        userPicture: isAnonymous ? '/static/logo.png' : result.picture,
         createdAt: dateNow,
         updatedAt: dateNow,
       });

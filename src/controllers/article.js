@@ -63,6 +63,7 @@ exports.addArticle = (req, res) => {
   const query = req.query;
   const article = req.body;
   const dateNow = new Date();
+  const isAnonymous = article.anonymous;
 
   if (!article.title || article.title.length > 20) {
     res.status(411).json({
@@ -90,8 +91,8 @@ exports.addArticle = (req, res) => {
       const newArticle = new Article({
         _id: mongoose.Types.ObjectId(),
         userId: result.id,
-        userName: result.name,
-        userPicture: result.picture,
+        userName: isAnonymous ? 'anonymous' : result.name,
+        userPicture: isAnonymous ? '/static/logo.png' : result.picture,
         createdAt: dateNow,
         updatedAt: dateNow,
         title: article.title,
@@ -108,7 +109,6 @@ exports.addArticle = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       if (err.status) {
         res.status(err.status).json(err);
       } else  {
@@ -183,7 +183,6 @@ exports.updateArticle = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       if (err.status) {
         res.status(err.status).json(err);
       } else  {

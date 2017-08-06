@@ -42,6 +42,9 @@ const model = mongoose.model('Article', {
     type: Number,
     required: true,
   },
+  anonymous: {
+    type: Boolean,
+  },
 });
 
 module.exports = model;

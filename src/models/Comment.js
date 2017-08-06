@@ -34,6 +34,9 @@ const model = mongoose.model('Comment', {
     type: Object,
     required: true,
   },
+  anonymous: {
+    type: Boolean,
+  },
 });
 
 module.exports = model;
