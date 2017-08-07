@@ -92,7 +92,7 @@ exports.addArticle = (req, res) => {
         _id: mongoose.Types.ObjectId(),
         userId: result.id,
         userName: isAnonymous ? 'anonymous' : result.name,
-        userPicture: isAnonymous ? '/static/logo.png' : result.picture,
+        userPicture: isAnonymous ? '/static/anonymous.jpg' : result.picture,
         createdAt: dateNow,
         updatedAt: dateNow,
         title: article.title,

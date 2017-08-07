@@ -79,7 +79,7 @@ exports.addComment = (req, res) => {
         anonymous: comment.anonymous,
         userId: result.id,
         userName: isAnonymous ? 'anonymous' : result.name,
-        userPicture: isAnonymous ? '/static/logo.png' : result.picture,
+        userPicture: isAnonymous ? '/static/anonymous.jpg' : result.picture,
         createdAt: dateNow,
         updatedAt: dateNow,
       });
