@@ -1,7 +1,7 @@
 const Channel = require('../models/Channel.js');
 const Category = require('../models/Category.js');
 
-exports.getChannels = (req, res) => {
+exports.getChannels = async function (req, res) {
   let sort = req.query.sort || 'subscriberCount';
   let order = req.query.order || 'desc';
   let page = parseInt(req.query.page || 1, 10);
@@ -20,77 +20,70 @@ exports.getChannels = (req, res) => {
     dbQuery.country = country;
   }
 
-  Promise.all(
+  const results = await Promise.all(
     [
       Channel.find(dbQuery).sort({ [sort]: order }).skip((page - 1)*count).limit(count),
       Channel.count(dbQuery),
       Category.findById('channelCategory'),
       Category.findById('countryCategory'),
     ]
-  )
-    .then((results) => {
-      res.status(200).json({
-        datas: results[0],
-        totalCount: results[1],
-        channelCategories: results[2].categories,
-        countryCategories: results[3].categories,
-        token: Math.random().toString(16).substring(2),
-      });
-    });
+  );
+
+  res.status(200).json({
+    datas: results[0],
+    totalCount: results[1],
+    channelCategories: results[2].categories,
+    countryCategories: results[3].categories,
+    token: Math.random().toString(16).substring(2),
+  });
+
 };
 
-exports.getChannel = (req, res) => {
+exports.getChannel = async function (req, res) {
   let channelId = req.params.id;
   const query = req.query;
 
   if (query.random) {
-    Channel.count({})
-      .then((result) => {
-        let randomSkip = parseInt(Math.random() * result, 10);
-        return Channel.find({}).skip(randomSkip).limit(1);
-      })
-      .then((result) => {
-        if (!result[0]) {
-          res.status(404).json({
-            message: 'no channel found',
-          });
-        } else {
-          res.status(200).json({
-            data: result[0],
-            token: Math.random().toString(16).substring(2),
-          });
-        }
-      })
-  } else {
-    Channel.findById(channelId)
-      .then((result) => {
-        if (!result) {
-          res.status(404).json({
-            message: 'no channel found',
-          });
-        } else {
-          res.status(200).json({
-            data: result,
-            token: Math.random().toString(16).substring(2),
-          });
-        }
+    const channelCount = await Channel.count({});
+    let randomSkip = parseInt(Math.random() * channelCount, 10);
+
+    const channels = await Channel.find({}).skip(randomSkip).limit(1);
+    if (!channels[0]) {
+      res.status(404).json({
+        message: 'no channel found',
       });
+      return;
+    }
+    res.status(200).json({
+      data: channels[0],
+      token: Math.random().toString(16).substring(2),
+    });
+  } else {
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      res.status(404).json({
+        message: 'no channel found',
+      }); 
+      return;
+    }
+    res.status(200).json({
+      data: channel,
+      token: Math.random().toString(16).substring(2),
+    });
   }
 };
 
-exports.addChannel = (req, res) => {
+exports.addChannel = async function (req, res) {
   const channel = req.body;
   if (!channel._id) {
     res.status(500).send('New channel must have _id parameters');
     return;
   }
+  try {
+    await Channel.update({_id: channel._id}, channel, {upsert: true});
 
-  const newChannel = new Channel(channel);
-  newChannel.save()
-    .then(() => {
-      res.status(200).send('successfully create channel');
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+    res.status(200).send('successfully create channel');
+  } catch (err) {
+    res.status(500).send(err);
+  }
 };

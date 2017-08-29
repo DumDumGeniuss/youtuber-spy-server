@@ -7,7 +7,7 @@
   "author": "DumDumGeniuss",
   "license": "MIT",
   "scripts": {
-    "test": "mocha --recursive",
+    "test": "./node_modules/.bin/mocha --recursive",
     "dev": "./node_modules/.bin/nodemon",
     "start": "node ./src/app.js",
     "eslint": "./node_modules/.bin/eslint src test"
@@ -21,6 +21,7 @@
     "express": "^4.15.2",
     "express-validator": "^3.2.0",
     "isomorphic-fetch": "^2.2.1",
+    "mocha": "^3.5.0",
     "mongoose": "^4.9.6"
   },
   "devDependencies": {
