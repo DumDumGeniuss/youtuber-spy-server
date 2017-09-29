@@ -9,6 +9,7 @@ exports.getChannels = async function (req, res) {
   let keyword = req.query.keyword || '';
   let category = req.query.category || '';
   let country = req.query.country || '';
+  let dataSet = req.query.dataSet || '';
 
   const dbQuery = {
     title: { $regex: new RegExp(keyword, 'i'), $exists: true },
@@ -20,9 +21,14 @@ exports.getChannels = async function (req, res) {
     dbQuery.country = country;
   }
 
+  let desiredParams = '';
+  if (dataSet === 'basic') {
+    desiredParams = 'country title category highThumbnails';
+  }
+
   const results = await Promise.all(
     [
-      Channel.find(dbQuery).sort({ [sort]: order }).skip((page - 1)*count).limit(count),
+      Channel.find(dbQuery, desiredParams).sort({ [sort]: order }).skip((page - 1)*count).limit(count),
       Channel.count(dbQuery),
       Category.findById('channelCategory'),
       Category.findById('countryCategory'),
